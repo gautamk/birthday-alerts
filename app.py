@@ -25,6 +25,7 @@ class Reminders(db.Model):
 class Config(db.Model):
     sender_name     = db.StringProperty()
     sender_email    = db.StringProperty()
+    appspot_id      = db.StringProperty()
 
 class Messages(db.Model):
     messageId       = db.FloatProperty()
@@ -78,9 +79,9 @@ class MessageHandler(webapp2.RequestHandler):
             if (messages.count() == 0):
                 setupDefaultMessages()
             self.response.out.write(renderTemplate('messages.html',{'messages' : messages, 'logoutUrl':users.CreateLogoutURL("/")}))
-        pass
     
     def post(self):
+        logging.info('inserting message : %s' % (self.request.get('message')))
         message = Messages()
         message.messageId = random()
         message.message = self.request.get('message')
@@ -97,12 +98,14 @@ class ConfigurationHandler(webapp2.RequestHandler):
         if type(config) == type('str'):    
             sender_name = ''
             sender_email = ''
+            appspot_id = ''
             key = ''
         else:
             sender_name = config.sender_name
             sender_email = config.sender_email
+            appspot_id = config.appspot_id
             key = config.key()
-        self.response.out.write(renderTemplate('config.html', {'sender_name':sender_name, 'sender_email':sender_email, 'id' : key, 'logoutUrl':users.CreateLogoutURL("/")}))
+        self.response.out.write(renderTemplate('config.html', {'sender_name':sender_name, 'sender_email':sender_email, 'appspot_id':appspot_id, 'id' : key, 'logoutUrl':users.CreateLogoutURL("/")}))
     
     def post(self):
         key = self.request.get('id')
@@ -110,11 +113,13 @@ class ConfigurationHandler(webapp2.RequestHandler):
             config = Config()
         else:
             config = Config().get(self.request.get('id'))
-        if config.sender_name == self.request.get('name') and config.sender_email == self.request.get('emailId'): 
-            logging.info("Nothing to do. No change in name and emailid")
+        if config.sender_name == self.request.get('name') and config.sender_email == self.request.get('emailId') and config.appspot_id == self.request.get('appspotId'): 
+            logging.info("Nothing to do. No change in name and email id and appspot_id")
         else:
+            logging.info("saving configuration changes")
             config.sender_name = self.request.get('name')
             config.sender_email = self.request.get('emailId')
+            config.appspot_id = self.request.get('appspotId')
             config.put()
         self.redirect('/config')
     
@@ -126,14 +131,16 @@ Scheduler Handler:
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 class SchedulerHandler(webapp2.RequestHandler):
     def get(self):
-        reminders = getReminders(1,1)
+        reminders = getReminders(0,0)
+        config = getConfig()
         for reminder in reminders:
             try:
                 wish = getMessages()
-                message = mail.EmailMessage(sender = getConfig().sender_email, subject="Happy Birthday " + reminder.name)
+                message = mail.EmailMessage(sender = config.sender_email, subject="Happy Birthday " + reminder.name)
                 message.to = reminder.name + " <" + reminder.emailId + ">"
                 message.body = "Happy Birthday" + wish
-                message.html = renderTemplate('email.html',{'message' : wish})
+                message.html = renderTemplate('email.html',{'message' : wish, 'appspotId': config.appspot_id})
+                logging.info(message.html)
                 message.send()
                 logging.info("Wishes sent for %s" % (reminder.name))
             except:
@@ -178,7 +185,7 @@ def getMessages():
     return message
     
 def renderTemplate(template, template_values):
-    output = jinja_environment.get_template(template)
+    output = jinja_environment.get_template('templates/'+template)
     return output.render(template_values)
 
 def setupDefaultMessages():

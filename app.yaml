@@ -12,6 +12,9 @@ libraries:
   version: latest
   
 handlers:
+- url: /images
+  static_dir: images
+  
 - url: /.*
   script: app.app
   login: admin
