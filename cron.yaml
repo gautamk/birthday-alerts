@@ -1,0 +1,4 @@
+cron:
+- description: send wish emails
+  url: /schedule
+  schedule: every day 00:00

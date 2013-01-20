@@ -1,0 +1,17 @@
+application: birthday-alerts
+version: hand-coded
+runtime: python27
+api_version: 1
+threadsafe: true
+
+libraries:
+- name: webapp2
+  version: "latest"
+
+- name: jinja2
+  version: latest
+  
+handlers:
+- url: /.*
+  script: app.app
+  login: admin

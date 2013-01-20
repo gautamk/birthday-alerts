@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Messages</title>
+		<style>
+			html{ overflow-y:scroll; }
+			a{ text-decoration:none; }
+			form{ width:500px; margin:0 auto; }
+			h1, h3{ width:100%; text-align:center; }
+			nav { text-align:center; }
+			.label{ width:100px; }
+			.messageList{ width:800px; margin:0 auto; }
+		</style>
+	</head>
+	<body>
+		<h1> Birthday Alerts </h1>
+		<nav>
+			<div>
+				<a href="/">Remainders</a> | 
+				<a href="/message">Messages</a> | 
+				<a href="/config">Configuration</a> |
+			<a href="{{ logoutUrl }}">Logout</a>
+			</div>
+		</nav>
+		<h3> Messages </h3>
+		<form name="messageForm" id="messageForm" method="post">
+			<table style="width:100%;">
+				<tr>
+					<td>
+						<textarea name="message" id="message" rows=5 style="width:100%;"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<center><input type="Submit" value="Add()"/></center>
+					</td>
+				</tr>
+			</table>
+		</form>
+		<br/><br/><hr/><br/><br/>
+		<table class="messageList">
+			{% for message in messages %}
+				<tr>
+					<td style="border-bottom:1px solid; padding-top:3px;">{{ message.message }}</td>
+				</tr>
+			{% endfor %}
+		</table>
+		<br/>
+	</body>
+</html>

@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Remainders</title>
+		<style>
+			html{ overflow-y:scroll; }
+			a{ text-decoration:none; }
+			form{ width:500px; margin:0 auto; }
+			h1, h3{ width:100%; text-align:center; }
+			nav { text-align:center; }
+			.label{ width:100px; }
+			.eventList{ width:800px; margin:0 auto; }
+		</style>
+	</head>
+	<body>
+		<h1> Birthday Alerts</h1>
+		<nav>
+			<a href="/">Remainders</a> | 
+			<a href="/message">Messages</a> | 
+			<a href="/config">Configuration</a> |
+			<a href="{{ logoutUrl }}">Logout</a>
+		</nav>
+		<h3> Remainders </h3>
+		<form id="remainderForm" name="remainderForm" method="POST">
+			<table>
+				<tr>
+					<td class="label">Name : </td>
+					<td><input type="text" name="name" id="name" value="{{ editEvent.name }}" style="width:300px;"/></td>
+				</tr>
+				<tr>
+					<td class="label">Email Id : </td>
+					<td><input type="email" name="emailId" id="emailId" value="{{ editEvent.emailId }}" style="width:300px;"/></td>
+				</tr>
+				<tr>
+					<td class="label">Event Day : </td>
+					<td><input type="date" name="eventDate" id="eventDate" value="{% if editEvent != '' %}{{ editEvent.eventYear }}-{% if editEvent.eventMonth < 10 %}0{{ editEvent.eventMonth }}{% else %}{{ editEvent.eventMonth }}{% endif %}-{% if editEvent.eventDay < 10 %}0{{ editEvent.eventDay }}{% else %}{{ editEvent.eventDay }}{% endif %}{% endif %}" style="width:300px;"/></td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td><input type="hidden" name="id" id="id" value="{% if editEvent != '' %}{{ editEvent.key() }}{% endif %}"/></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<table style="width:100%;">
+							<tr>
+								<td style="width:100px;">&nbsp;</td>
+								<td style="width:100px;"><input type="Submit" value="Save()"/></td>
+								<td style="width:100px;">&nbsp;</td>
+								<td style="width:100px;"><input type="Reset" value="Clear()"/></td>
+								<td style="width:100px;">&nbsp;</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</form>
+		
+		<table class="eventList">
+			<tr>
+				<th>name</th>
+				<th>email Id</th>
+				<th>eventDay</th>
+				<th>eventMonth</th>
+				<th>eventYear</th>
+			</tr>
+			{% for event in eventList %}
+				<tr>
+					<td>{{ event.name }}</td>
+					<td>{{ event.emailId }}</td>
+					<td>{{ event.eventDay }}</td>
+					<td>{{ event.eventMonth }}</td>
+					<td>{{ event.eventYear }}</td>
+					<td><a href="/?action=delete&id={{ event.key() }}">[<b>X</b>]</a></td>
+					<td><a href="/?action=edit&id={{ event.key() }}">[<b>edit</b>]</a></td>
+				</tr>
+			{% endfor %}
+		</table>
+	</body>
+</html>

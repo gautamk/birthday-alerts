@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Configuration</title>
+		<style>
+			html{ overflow-y:scroll; }
+			a{ text-decoration:none; }
+			form{ width:500px; margin:0 auto; }
+			h1, h3{ width:100%; text-align:center; }
+			nav { text-align:center; }
+			.label{ width:120px; }
+			.eventList{ width:800px; margin:0 auto; }
+		</style>
+	</head>
+	<body>
+		<h1> Birthday Alerts </h1>
+		<nav>
+			<div>
+				<a href="/">Remainders</a> | 
+				<a href="/message">Messages</a> | 
+				<a href="/config">Configuration</a> |
+			<a href="{{ logoutUrl }}">Logout</a>
+			</div>
+		</nav>
+		<h3> Configuration </h3>
+		<form id="configForm" name="configForm" method="post">
+			<table>
+				<tr>
+					<td class="label">Sender Name : </td>
+					<td><input type="text" name="name" id="name" value="{{ sender_name }}" style="width:300px;"/></td>
+				</tr>
+				<tr>
+					<td class="label">Sender Email Id : </td>
+					<td><input type="email" name="emailId" id="emailId" value="{{ sender_email }}" style="width:300px;"/></td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td><input type="hidden" name="id" id="id" value="{{ id }}"/></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<center><input type="Submit" value="Save()"/></center>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</body>
+</html>
