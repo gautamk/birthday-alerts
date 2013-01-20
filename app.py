@@ -131,7 +131,7 @@ Scheduler Handler:
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 class SchedulerHandler(webapp2.RequestHandler):
     def get(self):
-        reminders = getReminders(0,0)
+        reminders = getReminders(1,1)
         config = getConfig()
         for reminder in reminders:
             try:
