@@ -26,6 +26,7 @@ class Config(db.Model):
     sender_name     = db.StringProperty()
     sender_email    = db.StringProperty()
     appspot_id      = db.StringProperty()
+    cc_id           = db.StringProperty()
 
 class Messages(db.Model):
     messageId       = db.FloatProperty()
@@ -99,13 +100,15 @@ class ConfigurationHandler(webapp2.RequestHandler):
             sender_name = ''
             sender_email = ''
             appspot_id = ''
+            cc_id = ''
             key = ''
         else:
             sender_name = config.sender_name
             sender_email = config.sender_email
             appspot_id = config.appspot_id
+            cc_id = config.cc_id
             key = config.key()
-        self.response.out.write(renderTemplate('config.html', {'sender_name':sender_name, 'sender_email':sender_email, 'appspot_id':appspot_id, 'id' : key, 'logoutUrl':users.CreateLogoutURL("/")}))
+        self.response.out.write(renderTemplate('config.html', {'sender_name':sender_name, 'sender_email':sender_email, 'appspot_id':appspot_id, 'id' : key, 'cc_id':cc_id, 'logoutUrl':users.CreateLogoutURL("/")}))
     
     def post(self):
         key = self.request.get('id')
@@ -113,13 +116,14 @@ class ConfigurationHandler(webapp2.RequestHandler):
             config = Config()
         else:
             config = Config().get(self.request.get('id'))
-        if config.sender_name == self.request.get('name') and config.sender_email == self.request.get('emailId') and config.appspot_id == self.request.get('appspotId'): 
+        if config.sender_name == self.request.get('name') and config.sender_email == self.request.get('emailId') and config.appspot_id == self.request.get('appspotId') and config.cc_id == self.request.get('ccId'): 
             logging.info("Nothing to do. No change in name and email id and appspot_id")
         else:
             logging.info("saving configuration changes")
             config.sender_name = self.request.get('name')
             config.sender_email = self.request.get('emailId')
             config.appspot_id = self.request.get('appspotId')
+            config.cc_id = self.request.get('ccId')
             config.put()
         self.redirect('/config')
     
@@ -138,6 +142,8 @@ class SchedulerHandler(webapp2.RequestHandler):
                 wish = getMessages()
                 message = mail.EmailMessage(sender = config.sender_email, subject="Happy Birthday " + reminder.name)
                 message.to = reminder.name + " <" + reminder.emailId + ">"
+                if config.cc_id != "":
+                    message.cc = config.cc_id
                 message.body = "Happy Birthday" + wish
                 message.html = renderTemplate('email.html',{'message' : wish, 'appspotId': config.appspot_id})
                 logging.info(message.html)
