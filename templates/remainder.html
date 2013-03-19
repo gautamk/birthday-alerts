@@ -2,6 +2,16 @@
 <html>
 	<head>
 		<title>Remainders</title>
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+        <style>
+            body {
+                padding-top: 60px;
+                padding-bottom: 40px;
+            }
+        </style>
+        <link rel="stylesheet" href="css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="css/main.css">
+
 		<style>
 			html{ overflow-y:scroll; }
 			a{ text-decoration:none; }
@@ -22,7 +32,7 @@
 		</nav>
 		<h3> Remainders </h3>
 		<form id="remainderForm" name="remainderForm" method="POST">
-			<table>
+			<table class="table ">
 				<tr>
 					<td class="label">Name : </td>
 					<td><input type="text" name="name" id="name" value="{{ editEvent.name }}" style="width:300px;"/></td>
@@ -41,12 +51,12 @@
 				</tr>
 				<tr>
 					<td colspan="2">
-						<table style="width:100%;">
+						<table style="width:100%;" class="table ">
 							<tr>
 								<td style="width:100px;">&nbsp;</td>
-								<td style="width:100px;"><input type="Submit" value="Save()"/></td>
+								<td style="width:100px;"><input type="Reset" value="Clear" class="btn btn-danger"/></td>
 								<td style="width:100px;">&nbsp;</td>
-								<td style="width:100px;"><input type="Reset" value="Clear()"/></td>
+								<td style="width:100px;"><input type="Submit" value="Save" class="btn btn-primary"/></td>
 								<td style="width:100px;">&nbsp;</td>
 							</tr>
 						</table>
@@ -55,7 +65,7 @@
 			</table>
 		</form>
 		
-		<table class="eventList">
+		<table class="eventList" class="table table-striped table-hover">
 			<tr>
 				<th>name</th>
 				<th>email Id</th>
@@ -75,5 +85,11 @@
 				</tr>
 			{% endfor %}
 		</table>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+
+        <script src="js/vendor/bootstrap.min.js"></script>
+
+        <script src="js/main.js"></script>
 	</body>
 </html>
